@@ -1,0 +1,72 @@
+sudo fdisk -l
+
+清空ssd
+sudo dd bs=1M if=/dev/zero of=/dev/nvme0n1 count=2000 status=progress
+sudo sync
+
+烧录
+sudo dd bs=1M if=Orangepi5plus_1.0.8_debian_bookworm_desktop_xfce_linux5.10.160.img of=/dev/nvme0n1 status=progress
+
+sudo sync
+
+改中文
+orangepi-config
+sudo nano /etc/default/locale
+
+LANG=en_US.UTF-8
+LANGUAGE=en_US:en
+LC_ALL=en_US.UTF-8
+
+
+默认密码
+orangepi
+
+su root
+passwd sd
+
+
+
+
+改密码
+passwd
+
+改用户名
+su
+sed -i "s/orangepi/sd/g" /etc/passwd
+sed -i "s/orangepi/sd/g" /etc/shadow
+sed -i "s/orangepi/sd/g" /etc/group
+mv /home/orangepi /home/sd
+desktop_login.sh sd
+reboot
+
+自动登录
+sudo desktop_login.sh sd
+
+
+
+执行以下三条指令，将永久关闭控制台的服务
+
+sudo systemctl stop serial-getty@ttyFIQ0.service
+
+sudo systemctl disable serial-getty@ttyFIQ0.service
+
+sudo systemctl mask serial-getty@ttyFIQ0.service
+
+之后就可以将调试串口当做普通串口使用了
+
+
+重新配置X服务器
+sudo dpkg-reconfigure xserver-xorg
+
+
+重启显示管理器
+sudo systemctl restart lightdm
+
+
+如果Debian启动后无法进入桌面，可能是由于各种原因导致的。以下是一些可能的解决方法：
+
+检查X服务器是否启动：使用Ctrl + Alt + F1键盘组合键切换到命令行界面，然后输入命令“sudo service gdm status”或“sudo service lightdm status”检查X服务器是否正常启动。
+检查错误日志：使用命令“cat /var/log/Xorg.0.log”查看X服务器的错误日志，了解具体出现了什么问题。
+重新配置X服务器：使用命令“sudo dpkg-reconfigure xserver-xorg”重新配置X服务器，可能能够解决问题。
+更新系统：使用命令“sudo apt-get update && sudo apt-get upgrade”更新系统，可能有一些包更新可以修复问题。
+重新安装桌面环境：如果以上方法都无效，可以尝试重新安装桌面环境，如GNOME、KDE等。
