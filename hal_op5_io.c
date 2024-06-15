@@ -1,5 +1,5 @@
 /********************************************************************
-* Description:  hal_opi5_gpio.c0
+* Description:  hal_opi5_gpio.c
 *               Driver for the Orange Pi 5 GPIO pins
 *
 * Author: Andrea Guglielmi
